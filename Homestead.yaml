@@ -1,0 +1,26 @@
+ip: 192.168.56.56
+memory: 2048
+cpus: 2
+provider: virtualbox
+authorize: ~/.ssh/id_rsa.pub
+keys:
+    - ~/.ssh/id_rsa
+folders:
+    - map: /home/petro/Projects/webInfo-harvest
+      to: /home/vagrant/code
+sites:
+    - map: webinfo-harvest.test
+      to: /home/vagrant/code/public
+      php: "8.2"
+databases:
+    - webinfo-harvest
+features:
+    - mysql: false
+    - mariadb: false
+    - postgresql: true
+    - ohmyzsh: false
+    - webdriver: false
+services:
+    - enabled: [postgresql]
+name: webinfo-harvest
+hostname: webinfo-harvest
