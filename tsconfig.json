@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "baseUrl": "assets",
         "target": "es5",
         "module": "commonjs",
         "jsx": "react",
@@ -8,4 +9,5 @@
         "strict": true,
         "forceConsistentCasingInFileNames": true
     },
+    "include": ["assets"]
 }

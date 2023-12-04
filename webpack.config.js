@@ -1,4 +1,5 @@
 const Encore = require('@symfony/webpack-encore');
+const path = require('path');
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
 // It's useful when you use tools that rely on webpack.config.js file.
@@ -54,13 +55,20 @@ Encore
     })
 
     // enables Sass/SCSS support
-    .enableSassLoader()
+    .enableSassLoader(options => {
+        options.additionalData = `@import "${path.resolve(__dirname, './assets/styles/main.scss')}";`
+    })
 
     // uncomment if you use TypeScript
     .enableTypeScriptLoader()
 
     // uncomment if you use React
     .enableReactPreset()
+    .addAliases({
+        components: path.resolve(__dirname, 'assets/components/'),
+        route: path.resolve(__dirname, 'assets/route/'),
+        styles: path.resolve(__dirname, 'assets/styles/')
+    })
 
     // uncomment to get integrity="..." attributes on your script & link tags
     // requires WebpackEncoreBundle 1.4 or higher
@@ -68,6 +76,13 @@ Encore
 
     // uncomment if you're having problems with a jQuery plugin
     //.autoProvidejQuery()
+
+    .configureWatchOptions(watchOptions => {
+        watchOptions.poll = 300;
+    })
+    .configureDevServerOptions(options => {
+        options.allowedHosts = 'all';
+    })
 ;
 
 module.exports = Encore.getWebpackConfig();
