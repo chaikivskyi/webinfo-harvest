@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Controller;
 
@@ -12,9 +13,5 @@ class MainController extends AbstractController
     public function index(): Response
     {
         return $this->render('main.html.twig');
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/MainController.php',
-        ]);
     }
 }
