@@ -70,6 +70,7 @@ Encore
         styles: path.resolve(__dirname, 'assets/styles/'),
         util: path.resolve(__dirname, 'assets/util/'),
         query: path.resolve(__dirname, 'assets/query/'),
+        features: path.resolve(__dirname, 'assets/features/'),
     })
 
     // uncomment to get integrity="..." attributes on your script & link tags

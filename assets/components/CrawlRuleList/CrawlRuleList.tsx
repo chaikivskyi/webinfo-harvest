@@ -1,22 +1,33 @@
-import React, { useEffect, useState } from 'react';
+import React, {MouseEvent, useEffect} from 'react';
 
-import { CrawlRuleItem } from './CrawlRulesList.type';
-import { getCrawlRules } from 'query/CrawlRules';
+import { useAppSelector, useAppDispatch } from 'features/hooks'
+import { fetchDataFailure, fetchRulesSuccess, select } from 'features/CrawlRule/CrawlRuleSlice';
 
 import './CrawlRuleList.style.scss';
+import { getCrawlRules } from 'query/CrawlRules';
+import { CrawlRuleItem } from './CrawlRulesList.type';
 
 export const CrawlRuleList = () => {
-    const [rules, setRules] = useState<CrawlRuleItem[]>([]);
+    const rules = useAppSelector(state => state.crawlRules.rules)
+    const dispatch = useAppDispatch()
 
     useEffect(() => {
         getCrawlRules().then((response) => {
-            setRules(response.getMembers() as CrawlRuleItem[]);
-        });
-    }, []);
+            dispatch(fetchRulesSuccess(response.getMembers() as CrawlRuleItem[]));
+        }).catch(() => dispatch(fetchDataFailure()));
+    }, [dispatch]);
+
+    const selectRule = (event: MouseEvent, ruleId: number) => {
+        dispatch(select(ruleId))
+    }
 
     return <div className="CrawlRuleList">{ rules.map((rule) => {
-        return <div className="CrawlRuleList-Item">
-            <span>{rule.label}</span>
+        return <div
+            className="CrawlRuleList-Item"
+            key={ rule.id }
+            onClick={ (event) => selectRule(event, rule.id) }
+        >
+            <span>{ rule.label }</span>
         </div>
     }) }</div>
 }

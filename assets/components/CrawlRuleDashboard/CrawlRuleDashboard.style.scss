@@ -1,0 +1,22 @@
+.CrawlRuleDashboard {
+    background-color: #F0F0F0;
+    min-width: 400px;
+    border-radius: 0 20px 20px 0;
+    padding: 20px;
+
+    &-Operation {
+        background-color: #FFFFFF;
+        padding: 5px;
+        border-radius: 20px;
+        border: 1px solid #000000;
+    }
+
+    &-Operations {
+        text-align: center;
+
+        .ArrowDown {
+            padding: 5px;
+            margin: 10px;
+        }
+    }
+}
