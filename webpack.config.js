@@ -67,7 +67,9 @@ Encore
     .addAliases({
         components: path.resolve(__dirname, 'assets/components/'),
         route: path.resolve(__dirname, 'assets/route/'),
-        styles: path.resolve(__dirname, 'assets/styles/')
+        styles: path.resolve(__dirname, 'assets/styles/'),
+        util: path.resolve(__dirname, 'assets/util/'),
+        query: path.resolve(__dirname, 'assets/query/'),
     })
 
     // uncomment to get integrity="..." attributes on your script & link tags
@@ -79,6 +81,7 @@ Encore
 
     .configureWatchOptions(watchOptions => {
         watchOptions.poll = 300;
+        watchOptions.ignored = '/node_modules/'
     })
     .configureDevServerOptions(options => {
         options.allowedHosts = 'all';

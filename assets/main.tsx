@@ -13,9 +13,10 @@ if (rootElement) {
     root.render(
         <BrowserRouter>
             <Suspense fallback={<Loader />}>
+
                 <App>
                     <Routes>
-                        <Route path="/" Component={HomePage} />
+                        <Route index element={<HomePage />} />
                     </Routes>
                 </App>
             </Suspense>
