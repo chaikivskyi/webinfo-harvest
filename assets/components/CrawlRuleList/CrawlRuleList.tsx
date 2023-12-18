@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { CrawlRuleItem } from './CrawlRulesList.type';
 import { getCrawlRules } from 'query/CrawlRules';
 
+import './CrawlRuleList.style.scss';
+
 export const CrawlRuleList = () => {
     const [rules, setRules] = useState<CrawlRuleItem[]>([]);
 
@@ -12,8 +14,8 @@ export const CrawlRuleList = () => {
         });
     }, []);
 
-    return <div>{ rules.map((rule) => {
-        return <div>
+    return <div className="CrawlRuleList">{ rules.map((rule) => {
+        return <div className="CrawlRuleList-Item">
             <span>{rule.label}</span>
         </div>
     }) }</div>

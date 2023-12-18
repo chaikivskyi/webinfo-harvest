@@ -1,0 +1,25 @@
+.CrawlRuleList {
+    background-color: #F0F0F0;
+    max-width: 193px;
+    border-radius: 20px 0 0 20px;
+    padding: 20px;
+    height: 100%;
+
+    &-Item {
+        border: 1px solid #000000;
+        border-radius: 20px;
+        padding: 10px;
+        background-color: #FFFFFF;
+        margin-bottom: 15px;
+        cursor: pointer;
+        text-align: center;
+
+        &:last-of-type {
+            margin-bottom: 0;
+        }
+
+        &:hover {
+            border-color: #1E90FF;
+        }
+    }
+}
