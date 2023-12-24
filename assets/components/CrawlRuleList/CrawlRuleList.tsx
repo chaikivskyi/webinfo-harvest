@@ -1,20 +1,16 @@
 import React, {MouseEvent, useEffect} from 'react';
 
 import { useAppSelector, useAppDispatch } from 'features/hooks'
-import { fetchDataFailure, fetchRulesSuccess, select } from 'features/CrawlRule/CrawlRuleSlice';
+import { select, fetchRules } from 'features/CrawlRule/CrawlRuleSlice';
 
 import './CrawlRuleList.style.scss';
-import { getCrawlRules } from 'query/CrawlRules';
-import { CrawlRuleItem } from './CrawlRulesList.type';
 
 export const CrawlRuleList = () => {
     const rules = useAppSelector(state => state.crawlRules.rules)
     const dispatch = useAppDispatch()
 
     useEffect(() => {
-        getCrawlRules().then((response) => {
-            dispatch(fetchRulesSuccess(response.getMembers() as CrawlRuleItem[]));
-        }).catch(() => dispatch(fetchDataFailure()));
+        dispatch(fetchRules());
     }, [dispatch]);
 
     const selectRule = (event: MouseEvent, ruleId: number) => {

@@ -1,7 +1,11 @@
-import { executeGet } from 'util/Query/Fetch';
+import { executeGet, executePost } from 'util/Query/Fetch';
 import { REST_API_PATH } from 'util/Config';
-import { CrawlRule } from './CrawlRules.type';
+import { CrawlRuleResponse, CrawlRule } from './CrawlRules.type';
 
 export const getCrawlRules = async () => {
-    return await executeGet<CrawlRule>(REST_API_PATH + '/crawl-rule');
+    return await executeGet<CrawlRuleResponse>(REST_API_PATH + '/crawl-rule');
+}
+
+export const createRule = async (data: Omit<CrawlRule, 'id' | 'operations'>) => {
+    return await executePost<Omit<CrawlRule, 'id' | 'operations'>>(REST_API_PATH + '/crawl-rule', data);
 }

@@ -1,0 +1,19 @@
+button {
+    font-size: 1em;
+    font-weight: 700;
+    border-radius: 20px;
+    border: 1px solid;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.Button {
+    &-Main {
+        background-color: #FF7F7F;
+
+        &:hover {
+            background-color: #FF5252;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+    }
+}

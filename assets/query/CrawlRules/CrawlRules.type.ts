@@ -1,14 +1,9 @@
 import { ResponseMembers } from 'util/Query/Query.type';
 
-export interface CrawlRule extends ResponseMembers {
-    id: number
-    label: string
-    operations: CrawlOperation[]
+export interface CrawlRuleResponse extends ResponseMembers, CrawlRule {
 }
 
-export interface CrawlOperation {
-    id: number,
-    name: string,
-    position: number,
-    ruleId: number
+export interface CrawlRule {
+    id: number
+    label: string
 }

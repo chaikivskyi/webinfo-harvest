@@ -1,12 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAppSelector } from 'features/hooks'
 
-import ArrowDownIcon from 'components/ArrowDownIcon';
+import DashboardOperations from 'components/DashboardOperations';
 
 import './CrawlRuleDashboard.style.scss';
 
 export const CrawlRuleDashboard = () => {
     const rule = useAppSelector(state => state.crawlRules.activeRule)
+    const [isPositionChanged, setPositionChanged] = useState<boolean>(false);
+
+    const onPositionChange = () => {
+        setPositionChanged(true);
+    }
+
+    const onSave = () => {
+        if (!rule || !rule.id) {
+
+        }
+    }
+
+    const getSaveButton = () => {
+        return <div>
+            <button className="Button-Main">Save</button>
+        </div>;
+    }
 
     if (!rule) {
         return <div className="CrawlRuleDashboard">
@@ -16,15 +33,8 @@ export const CrawlRuleDashboard = () => {
 
     return <div className="CrawlRuleDashboard">
         <h2>{ rule && rule.label } </h2>
-        <div className="CrawlRuleDashboard-Operations">
-            { rule && rule.operations.map((operation, index) => {
-                return (<>
-                        <div className="CrawlRuleDashboard-Operation">{operation.name}</div>
-                        { index !== rule.operations.length - 1 && <ArrowDownIcon /> }
-                    </>
-                );
-            })}
-        </div>
+        <DashboardOperations ruleId={ rule.id }/>
+        { isPositionChanged && getSaveButton() }
     </div>;
 }
 

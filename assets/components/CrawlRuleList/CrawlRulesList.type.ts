@@ -1,4 +1,4 @@
-import { CrawlRule } from 'query/CrawlRules/CrawlRules.type';
+import { CrawlRuleResponse } from 'query/CrawlRules/CrawlRules.type';
 
-export interface CrawlRuleItem extends CrawlRule {
+export interface CrawlRuleItem extends CrawlRuleResponse {
 }
