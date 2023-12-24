@@ -21,7 +21,7 @@ class CrawlRule
     #[ORM\Column(length: 255)]
     private ?string $label = null;
 
-    #[ORM\OneToMany(mappedBy: 'rule_id', targetEntity: CrawlOperation::class, orphanRemoval: true, fetch: 'LAZY')]
+    #[ORM\OneToMany(mappedBy: 'rule', targetEntity: CrawlOperation::class, orphanRemoval: true, fetch: 'LAZY')]
     private Collection $operations;
 
     public function __construct()
