@@ -4,6 +4,9 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
+use ApiPlatform\Metadata\Post;
 use App\Repository\CrawlRuleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -21,7 +24,7 @@ class CrawlRule
     #[ORM\Column(length: 255)]
     private ?string $label = null;
 
-    #[ORM\OneToMany(mappedBy: 'rule', targetEntity: CrawlOperation::class, orphanRemoval: true, fetch: 'LAZY')]
+    #[ORM\OneToMany(targetEntity: CrawlOperation::class, orphanRemoval: true, mappedBy: 'rule', fetch: 'LAZY')]
     private Collection $operations;
 
     public function __construct()

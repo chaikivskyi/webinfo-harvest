@@ -1,0 +1,32 @@
+.Dashboard {
+    &-Operation {
+        display: flex;
+        background-color: #FFFFFF;
+        padding: 10px 15px;
+        border-radius: 20px;
+        border: 1px solid #000000;
+
+        &-Actions {
+            margin-left: auto;
+
+            .Position {
+                max-width: 30px;
+                text-align: center;
+            }
+        }
+    }
+
+    &-Operations {
+        text-align: center;
+
+        .ArrowDown {
+            padding: 5px;
+            margin: 10px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 20px;
+        }
+    }
+}

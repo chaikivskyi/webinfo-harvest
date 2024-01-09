@@ -3,8 +3,5 @@ export interface ApiResponse {
     "@id": string;
     "@type": string;
     "hydra:totalItems": number;
-    "hydra:member": ResponseMembers[];
-}
-
-export interface ResponseMembers {
+    "hydra:member": [];
 }

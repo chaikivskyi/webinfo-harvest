@@ -7,23 +7,6 @@ import './CrawlRuleDashboard.style.scss';
 
 export const CrawlRuleDashboard = () => {
     const rule = useAppSelector(state => state.crawlRules.activeRule)
-    const [isPositionChanged, setPositionChanged] = useState<boolean>(false);
-
-    const onPositionChange = () => {
-        setPositionChanged(true);
-    }
-
-    const onSave = () => {
-        if (!rule || !rule.id) {
-
-        }
-    }
-
-    const getSaveButton = () => {
-        return <div>
-            <button className="Button-Main">Save</button>
-        </div>;
-    }
 
     if (!rule) {
         return <div className="CrawlRuleDashboard">
@@ -34,7 +17,6 @@ export const CrawlRuleDashboard = () => {
     return <div className="CrawlRuleDashboard">
         <h2>{ rule && rule.label } </h2>
         <DashboardOperations ruleId={ rule.id }/>
-        { isPositionChanged && getSaveButton() }
     </div>;
 }
 

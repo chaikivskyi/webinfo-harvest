@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
 import type { RootState, AppDispatch } from '../../store'
-import { CrawlRuleItem } from 'components/CrawlRuleList/CrawlRulesList.type';
+import { CrawlRuleItem } from 'query/CrawlRules/CrawlRules.type';
 import { getCrawlRules } from 'query/CrawlRules';
 
 interface CrawlRuleState {

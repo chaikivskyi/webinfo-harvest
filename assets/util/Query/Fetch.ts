@@ -1,5 +1,4 @@
 import { ApiResponseWrapper } from './ResponseWrapper';
-import { ResponseMembers } from './Query.type';
 
 const prepareUrl = (path: string) => {
     if (0 !== path.indexOf('/')) {
@@ -9,7 +8,7 @@ const prepareUrl = (path: string) => {
     return window.location.origin + path;
 }
 
-export const executeGet = async <T extends ResponseMembers>(path: string) => {
+export const executeGet = async <T>(path: string) => {
     const response = await fetch(prepareUrl(path));
 
     if (!response.ok) {
@@ -18,15 +17,17 @@ export const executeGet = async <T extends ResponseMembers>(path: string) => {
 
     const data = await response.json();
 
-    return new ApiResponseWrapper(data);
+    return new ApiResponseWrapper<T>(data);
 }
 
 export const executePost = async <T>(path: string, requestBody: T) => {
-    return await fetch(path, {
+    const response =  await fetch(path, {
         method: 'POST',
         body: JSON.stringify(requestBody),
         headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/ld+json',
         },
     });
+
+    return response.json();
 }

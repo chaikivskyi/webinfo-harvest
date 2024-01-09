@@ -7,66 +7,68 @@ use App\Dto\BatchOperations;
 use App\Entity\CrawlOperation;
 use App\Entity\CrawlRule;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 
 #[AsController]
 class OperationsBulkUpdate
 {
     public function __construct(
-        private EntityManagerInterface $entityManager,
+        private EntityManagerInterface $entityManager
     ) {
     }
 
-    #[Route(
-        name: 'crawl-operation_bulk_update',
-        path: 'api/crawl-operation/bulk',
-        methods: ['POST'],
-        defaults: [
-            '_api_resource_class' => CrawlOperation::class,
-            '_api_operation_name' => '_api_/crawl-operation_bulk_update',
-        ],
-    )]
-    public function __invoke(Request $request)
+    public function __invoke(#[MapRequestPayload]BatchOperations $query, int $ruleId)
     {
-        $data = json_decode($request->getContent(), true);
-
-        if (!is_array($data)) {
-            throw new BadRequestHttpException('Invalid data format. Expected an JSON.');
-        }
-
         $result = [];
         $crawlRuleRepository = $this->entityManager->getRepository(CrawlRule::class);
-        $crawlRule = $crawlRuleRepository->find($data[0]['ruleId']);
+        $operationRepository = $this->entityManager->getRepository(CrawlOperation::class);
+        $crawlRule = $crawlRuleRepository->find($ruleId);
+        $operationsIds = $this->getIds($query->getOperations());
+        $operationRepository->deleteExcludedRuleOperations($ruleId, $operationsIds);
+        $operations = $operationRepository->findByIds($operationsIds);
 
-        foreach ($data as $item) {
-            $operationId = $item['id'] ?? null;
-
-            if ($operationId) {
-                $operation = $this->entityManager->getRepository(CrawlOperation::class)->find($operationId);
-
-                if (!$operation) {
-                    continue;
-                }
-
-                $operation->setPosition($item['position'])
-                    ->setRule($crawlRule);
-                $this->entityManager->persist($operation);
-                $result[] = $operation;
+        foreach ($query->getOperations() as $item) {
+            if ($item->getId() && $operation = $this->getOperation($operations, $item->getId())) {
+                $entity = $operation;
+                $entity->setPosition($item->getPosition())
+                    ->setName($item->getName());
             } else {
-                $operation = new CrawlOperation();
-                $operation->setName(\App\Type\CrawlOperation::getValue($item['name']));
-                $operation->setPosition($item['position'])
-                    ->setRule($crawlRule);
-                $this->entityManager->persist($operation);
-                $result[] = $operation;
+                $entity = $item;
             }
+
+            $entity->setRule($crawlRule);
+
+            $this->entityManager->persist($entity);
+            $result[] = $entity;
         }
 
         $this->entityManager->flush();
 
         return new BatchOperations($result);
+    }
+
+    private function getOperation(array $operations, int $id): ?CrawlOperation
+    {
+        foreach ($operations as $operation) {
+            if ($operation->getId() === $id) {
+                return $operation;
+            }
+        }
+
+        return null;
+    }
+
+    private function getIds(array $items)
+    {
+        $ids = [];
+
+        foreach ($items as $item) {
+            if ($item->getId()) {
+                $ids[] = $item->getId();
+            }
+        }
+
+        return $ids;
     }
 }

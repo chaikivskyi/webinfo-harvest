@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\State\CollectionProvider;
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Link;
@@ -10,39 +12,43 @@ use ApiPlatform\Metadata\Post;
 use App\Controller\OperationsBulkUpdate;
 use App\Dto\BatchOperations;
 use App\Repository\CrawlOperationRepository;
-use App\Type\CrawlOperation as CrawlOperationEnum;
+use App\Type\CrawlOperationEnum;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ApiResource(
-    operations: [
-        new Post(
-            name: 'crawl-operation',
-            routeName: 'crawl-operation_bulk_update',
-            uriTemplate: '/crawl-operation/bulk',
-            controller: OperationsBulkUpdate::class,
-            output: BatchOperations::class,
-            input: BatchOperations::class
-        )
-    ]
-)]
+
 #[ApiResource(
     uriTemplate: '/crawl-rule/{ruleId}/operations',
     uriVariables: [
         'ruleId' => new Link(fromClass: CrawlRule::class, toProperty: 'rule'),
     ],
-    operations: [ new GetCollection() ]
+    operations: [
+        new GetCollection(),
+        new Post(
+            name: 'crawl-operation',
+            controller: OperationsBulkUpdate::class,
+            output: BatchOperations::class,
+            input: BatchOperations::class,
+            provider: CollectionProvider::class,
+            normalizationContext: ['groups' => ['batchUpdate']],
+        )
+    ]
 )]
 #[ORM\Entity(repositoryClass: CrawlOperationRepository::class)]
 class CrawlOperation
 {
+    #[ApiProperty(writable: true)]
+    #[Groups('batchUpdate')]
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
+    #[Groups('batchUpdate')]
     #[ORM\Column(length: 255, enumType: CrawlOperationEnum::class)]
     private ?CrawlOperationEnum $name = null;
 
+    #[Groups('batchUpdate')]
     #[ORM\Column]
     private ?int $position = null;
 
@@ -53,6 +59,13 @@ class CrawlOperation
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId($id): static
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getName(): ?CrawlOperationEnum

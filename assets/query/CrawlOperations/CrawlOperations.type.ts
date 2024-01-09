@@ -1,7 +1,5 @@
-import { ResponseMembers } from 'util/Query/Query.type';
-
-export interface CrawlOperationsResponse extends ResponseMembers, CrawlOperation {
-
+export interface CrawlOperationsBulkUpdateResponse {
+    operations: CrawlOperation[]
 }
 
 export interface CrawlOperation {

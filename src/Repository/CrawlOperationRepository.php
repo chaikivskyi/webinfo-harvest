@@ -21,20 +21,37 @@ class CrawlOperationRepository extends ServiceEntityRepository
         parent::__construct($registry, CrawlOperation::class);
     }
 
-//    /**
-//     * @return CrawlOperation[] Returns an array of CrawlOperation objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('c.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @return CrawlOperation[]
+     */
+    public function deleteExcludedRuleOperations(int $ruleId, array $ids): int
+    {
+        $queryBuilder = $this->createQueryBuilder('e');
+        $queryBuilder->delete(CrawlOperation::class, 'e')
+            ->andWhere('e.rule = :rule')
+            ->setParameter('ids', $ids)
+            ->setParameter('rule', $ruleId);
+
+        if (!empty($ids)) {
+            $queryBuilder->andWhere('e.id NOT IN (:ids)');
+        }
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    /**
+     * @return CrawlOperation[] Returns an array of CrawlOperation objects
+     */
+    public function findByIds(array $ids): array
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.id IN (:val)')
+            ->setParameter('val', $ids)
+            ->orderBy('c.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 
 //    public function findOneBySomeField($value): ?CrawlOperation
 //    {

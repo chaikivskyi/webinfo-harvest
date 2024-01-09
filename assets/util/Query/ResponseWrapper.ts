@@ -1,6 +1,6 @@
-import { ApiResponse, ResponseMembers } from './Query.type';
+import { ApiResponse } from './Query.type';
 
-export class ApiResponseWrapper<T extends ResponseMembers> {
+export class ApiResponseWrapper<T> {
     private readonly data: ApiResponse;
     private readonly members: T[];
     private readonly total: number;
