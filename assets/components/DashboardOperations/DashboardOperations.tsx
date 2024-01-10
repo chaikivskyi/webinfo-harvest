@@ -6,20 +6,25 @@ import {CrawlOperation, Names} from 'query/CrawlOperations/CrawlOperations.type'
 import ArrowDownIcon from 'components/ArrowDownIcon';
 import CrossIcon from 'components/CrossIcon';
 import PlusIcon from 'components/PlusIcon';
+import Loader from 'components/Loader';
 
-import './DashboardOperations.styles.scss';
+import './DashboardOperations.style.scss';
 
 export const DashboardOperations = (props: DashboardOperationsProps) => {
     const { ruleId } = props;
     const [ operations, setOperations ] = useState<CrawlOperation[]>([]);
+    const [ isLoading, setIsLoading ] = useState<boolean>(false);
 
     useEffect(() => {
         updateOperations();
     }, [ruleId]);
 
     const updateOperations = () => {
+        setIsLoading(true);
         getOperations(ruleId, 'position').then((response) => {
             setOperations(response.getMembers() as CrawlOperation[]);
+        }).finally(() => {
+            setIsLoading(false);
         });
     }
 
@@ -78,6 +83,7 @@ export const DashboardOperations = (props: DashboardOperationsProps) => {
     }
 
     return <div className="Dashboard-Operations">
+        { isLoading && <Loader/> }
         { operations.map((operation, index) => {
             return (<div key={ index }>
                 <div className="Dashboard-Operation">
