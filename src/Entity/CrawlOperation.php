@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use ApiPlatform\Doctrine\Orm\State\CollectionProvider;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
@@ -15,6 +16,7 @@ use App\Repository\CrawlOperationRepository;
 use App\Type\CrawlOperationEnum;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 
 
 #[ApiResource(
@@ -34,6 +36,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         )
     ]
 )]
+#[ApiFilter(OrderFilter::class, properties: ['id', 'position'], arguments: ['orderParameterName' => 'order'])]
 #[ORM\Entity(repositoryClass: CrawlOperationRepository::class)]
 class CrawlOperation
 {
@@ -80,9 +83,9 @@ class CrawlOperation
         return $this;
     }
 
-    public function getPosition(): ?int
+    public function getPosition(): int
     {
-        return $this->position;
+        return (int)$this->position;
     }
 
     public function setPosition(int $position): static

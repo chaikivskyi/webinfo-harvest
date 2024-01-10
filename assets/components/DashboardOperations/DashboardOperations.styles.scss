@@ -5,9 +5,11 @@
         padding: 10px 15px;
         border-radius: 20px;
         border: 1px solid #000000;
+        align-items: center;
 
         &-Actions {
             margin-left: auto;
+            display: flex;
 
             .Position {
                 max-width: 30px;
@@ -26,6 +28,10 @@
 
         button {
             width: 100%;
+            margin-top: 20px;
+        }
+
+        .PlusIcon {
             margin-top: 20px;
         }
     }

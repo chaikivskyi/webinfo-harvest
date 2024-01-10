@@ -31,13 +31,13 @@ class OperationsBulkUpdate
         foreach ($query->getOperations() as $item) {
             if ($item->getId() && $operation = $this->getOperation($operations, $item->getId())) {
                 $entity = $operation;
-                $entity->setPosition($item->getPosition())
-                    ->setName($item->getName());
             } else {
                 $entity = $item;
             }
 
-            $entity->setRule($crawlRule);
+            $entity->setPosition($item->getPosition())
+                ->setName($item->getName())
+                ->setRule($crawlRule);
 
             $this->entityManager->persist($entity);
             $result[] = $entity;

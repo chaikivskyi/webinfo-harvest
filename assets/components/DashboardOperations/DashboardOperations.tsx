@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 
-import { DashboardOperationsProps } from './DashboardOperations.type';
-import { getOperations, saveOperations as querySaveOperations } from 'query/CrawlOperations';
-import { CrawlOperation } from 'query/CrawlOperations/CrawlOperations.type';
+import {DashboardOperationsProps} from './DashboardOperations.type';
+import {getOperations, saveOperations as querySaveOperations} from 'query/CrawlOperations';
+import {CrawlOperation, Names} from 'query/CrawlOperations/CrawlOperations.type';
 import ArrowDownIcon from 'components/ArrowDownIcon';
+import CrossIcon from 'components/CrossIcon';
+import PlusIcon from 'components/PlusIcon';
 
 import './DashboardOperations.styles.scss';
 
@@ -12,25 +14,45 @@ export const DashboardOperations = (props: DashboardOperationsProps) => {
     const [ operations, setOperations ] = useState<CrawlOperation[]>([]);
 
     useEffect(() => {
-        getOperations(ruleId).then((response) => {
+        updateOperations();
+    }, [ruleId]);
+
+    const updateOperations = () => {
+        getOperations(ruleId, 'position').then((response) => {
             setOperations(response.getMembers() as CrawlOperation[]);
         });
-    }, [ruleId]);
+    }
 
     const saveOperations = () => {
         querySaveOperations(ruleId, operations.map((operation): Partial<CrawlOperation> => {
             return {
                 id: operation?.id,
-                name: operation.name,
+                name: operation.name ? operation.name : Names.Click,
                 position: operation?.position,
             };
-        }));
+        })).then(() => {
+            updateOperations();
+        });
     }
 
-    const handlePositionChange = (index: number, newPosition: number) => {
+    const deleteOperation = (index: number) => {
+        setOperations((prevOperations) =>
+            prevOperations.filter((operation, i) => i !== index)
+        );
+    }
+
+    const addOperation = () => {
+        setOperations((prevOperations) => {
+            const newOperation = {} as CrawlOperation;
+            const updatedOperations = [...prevOperations, newOperation];
+            return updatedOperations;
+        });
+    }
+
+    const handleInputChange = (index: number, updatedData: Partial<CrawlOperation>) => {
         setOperations((prevOperations) =>
             prevOperations.map((operation, i) =>
-                i === index ? { ...operation, position: newPosition } : operation
+                i === index ? { ...operation, ...updatedData } : operation
             )
         );
     };
@@ -41,11 +63,25 @@ export const DashboardOperations = (props: DashboardOperationsProps) => {
         </div>;
     }
 
+    const getLabelBlock = (operation: CrawlOperation, index: number) => {
+        const keys = Object.values(Names)
+
+        return <select name="name" value={operation.name} onChange={(e) => {
+            handleInputChange(index, { name: e.target.value as Names });
+        }}>
+            {keys.map((value, i) => (
+                <option key={i} value={value}>
+                    {value}
+                </option>
+            ))}
+        </select>;
+    }
+
     return <div className="Dashboard-Operations">
         { operations.map((operation, index) => {
-            return (<div key={ operation.id }>
+            return (<div key={ index }>
                 <div className="Dashboard-Operation">
-                    <span>{ operation.name }</span>
+                    <span>{ getLabelBlock(operation, index) }</span>
                     <div className="Dashboard-Operation-Actions">
                         <input
                             className="Position"
@@ -53,14 +89,22 @@ export const DashboardOperations = (props: DashboardOperationsProps) => {
                             name="position"
                             value={ operation.position }
                             onChange={(e) =>
-                                handlePositionChange(index, parseInt(e.target.value, 10))
+                                handleInputChange(index, { position: parseInt(e.target.value, 10)})
                             }
                         />
+                        <CrossIcon clickHandler={(e) => {
+                            deleteOperation(index)
+                        }}/>
                     </div>
                 </div>
                 {index !== operations.length - 1 && <ArrowDownIcon /> }
             </div>);
         })}
+
+        <PlusIcon clickHandler={(e) => {
+            addOperation()
+        }}/>
+
         { getSaveButton() }
     </div>;
 }

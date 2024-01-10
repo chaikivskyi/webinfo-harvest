@@ -1,15 +1,19 @@
 import { ApiResponseWrapper } from './ResponseWrapper';
 
-const prepareUrl = (path: string) => {
+const prepareUrl = (path: string, sort?: string, sortDir?: string) => {
     if (0 !== path.indexOf('/')) {
         path = '/' + path;
+    }
+
+    if (sort) {
+        path += `?order[${sort}]=${sortDir}`;
     }
 
     return window.location.origin + path;
 }
 
-export const executeGet = async <T>(path: string) => {
-    const response = await fetch(prepareUrl(path));
+export const executeGet = async <T>(path: string, sort?: string, sortDir: string = 'asc') => {
+    const response = await fetch(prepareUrl(path, sort, sortDir));
 
     if (!response.ok) {
         throw new Error(`Network response was not ok: ${response.statusText}`);

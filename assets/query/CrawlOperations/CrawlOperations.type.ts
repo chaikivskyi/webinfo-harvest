@@ -4,7 +4,13 @@ export interface CrawlOperationsBulkUpdateResponse {
 
 export interface CrawlOperation {
     id: number,
-    name: string,
+    name: Names,
     position: number,
     ruleId: number
+}
+
+export enum Names {
+    Click = 'click',
+    Wait = 'wait',
+    ReadText = 'read_text'
 }

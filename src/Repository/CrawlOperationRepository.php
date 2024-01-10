@@ -29,11 +29,11 @@ class CrawlOperationRepository extends ServiceEntityRepository
         $queryBuilder = $this->createQueryBuilder('e');
         $queryBuilder->delete(CrawlOperation::class, 'e')
             ->andWhere('e.rule = :rule')
-            ->setParameter('ids', $ids)
             ->setParameter('rule', $ruleId);
 
         if (!empty($ids)) {
-            $queryBuilder->andWhere('e.id NOT IN (:ids)');
+            $queryBuilder->andWhere('e.id NOT IN (:ids)')
+                ->setParameter('ids', $ids);
         }
 
         return $queryBuilder->getQuery()->getResult();
