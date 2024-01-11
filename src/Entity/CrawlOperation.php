@@ -15,7 +15,6 @@ use App\Dto\BatchOperations;
 use App\Repository\CrawlOperationRepository;
 use App\Type\CrawlOperationEnum;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 
 
