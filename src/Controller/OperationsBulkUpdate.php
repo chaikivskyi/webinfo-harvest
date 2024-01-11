@@ -37,6 +37,7 @@ class OperationsBulkUpdate
 
             $entity->setPosition($item->getPosition())
                 ->setName($item->getName())
+                ->setSelector($item->getSelector())
                 ->setRule($crawlRule);
 
             $this->entityManager->persist($entity);

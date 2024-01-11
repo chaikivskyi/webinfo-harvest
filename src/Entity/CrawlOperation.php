@@ -32,7 +32,6 @@ use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
             output: BatchOperations::class,
             input: BatchOperations::class,
             provider: CollectionProvider::class,
-            normalizationContext: ['groups' => ['batchUpdate']],
         )
     ]
 )]
@@ -41,23 +40,23 @@ use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 class CrawlOperation
 {
     #[ApiProperty(writable: true)]
-    #[Groups('batchUpdate')]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[Groups('batchUpdate')]
-    #[ORM\Column(length: 255, enumType: CrawlOperationEnum::class)]
+    #[ORM\Column(enumType: CrawlOperationEnum::class)]
     private ?CrawlOperationEnum $name = null;
 
-    #[Groups('batchUpdate')]
     #[ORM\Column]
     private ?int $position = null;
 
     #[ORM\ManyToOne(fetch: 'LAZY', inversedBy: 'operations')]
     #[ORM\JoinColumn(nullable: false)]
     private ?CrawlRule $rule = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $selector = null;
 
     public function getId(): ?int
     {
@@ -103,6 +102,18 @@ class CrawlOperation
     public function setRule(?CrawlRule $rule): static
     {
         $this->rule = $rule;
+
+        return $this;
+    }
+
+    public function getSelector(): ?string
+    {
+        return $this->selector;
+    }
+
+    public function setSelector(?string $selector): static
+    {
+        $this->selector = $selector;
 
         return $this;
     }

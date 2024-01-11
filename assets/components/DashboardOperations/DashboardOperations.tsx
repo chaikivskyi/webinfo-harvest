@@ -34,6 +34,7 @@ export const DashboardOperations = (props: DashboardOperationsProps) => {
                 id: operation?.id,
                 name: operation.name ? operation.name : Names.Click,
                 position: operation?.position,
+                selector: operation?.selector
             };
         })).then(() => {
             updateOperations();
