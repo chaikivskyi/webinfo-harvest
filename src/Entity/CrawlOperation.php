@@ -32,6 +32,9 @@ use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
             output: BatchOperations::class,
             input: BatchOperations::class,
             provider: CollectionProvider::class,
+            openapiContext: [
+                'summary' => 'Bulk create, update, or delete CrawlOperation resources.'
+            ]
         )
     ]
 )]
