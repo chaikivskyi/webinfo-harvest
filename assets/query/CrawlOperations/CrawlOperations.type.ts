@@ -6,6 +6,7 @@ export interface CrawlOperation {
     id: number,
     name: Names,
     position: number,
+    selector: string,
     ruleId: number
 }
 

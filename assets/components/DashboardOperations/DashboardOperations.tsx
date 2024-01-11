@@ -82,29 +82,45 @@ export const DashboardOperations = (props: DashboardOperationsProps) => {
         </select>;
     }
 
-    return <div className="Dashboard-Operations">
-        { isLoading && <Loader/> }
-        { operations.map((operation, index) => {
-            return (<div key={ index }>
-                <div className="Dashboard-Operation">
-                    <span>{ getLabelBlock(operation, index) }</span>
-                    <div className="Dashboard-Operation-Actions">
-                        <input
-                            className="Position"
-                            type="number"
-                            name="position"
-                            value={ operation.position }
-                            onChange={(e) =>
-                                handleInputChange(index, { position: parseInt(e.target.value, 10)})
-                            }
-                        />
-                        <CrossIcon clickHandler={(e) => {
-                            deleteOperation(index)
-                        }}/>
-                    </div>
+    const renderOperation = (operation: CrawlOperation, index: number) => {
+        return (<div key={ index }>
+            <div className="Dashboard-Operation">
+                <span>{getLabelBlock(operation, index)}</span>
+
+                <input
+                    className="Selector"
+                    type="text"
+                    name="selector"
+                    placeholder="selector"
+                    value={operation.selector}
+                    onChange={(e) =>
+                        handleInputChange(index, { selector: e.target.value })
+                    }
+                />
+
+                <div className="Dashboard-Operation-Actions">
+                    <input
+                        className="Position"
+                        type="number"
+                        name="position"
+                        value={operation.position}
+                        onChange={(e) =>
+                            handleInputChange(index, {position: parseInt(e.target.value, 10)})
+                        }
+                    />
+                    <CrossIcon clickHandler={(e) => {
+                        deleteOperation(index)
+                    }}/>
                 </div>
-                {index !== operations.length - 1 && <ArrowDownIcon /> }
-            </div>);
+            </div>
+            {index !== operations.length - 1 && <ArrowDownIcon/>}
+        </div>);
+    }
+
+    return <div className="Dashboard-Operations">
+        {isLoading && <Loader/>}
+        {operations.map((operation, index) => {
+            return renderOperation(operation, index);
         })}
 
         <PlusIcon clickHandler={(e) => {

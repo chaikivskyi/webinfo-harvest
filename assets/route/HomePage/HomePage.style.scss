@@ -1,4 +1,8 @@
 .HomePage {
     display: flex;
     gap: 15px;
+
+    @include mobile {
+        flex-direction: column;
+    }
 }
