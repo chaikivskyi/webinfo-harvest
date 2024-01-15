@@ -15,8 +15,18 @@
             display: flex;
 
             .Position {
-                max-width: 30px;
+                max-width: 70px;
                 text-align: center;
+            }
+
+            input::-webkit-outer-spin-button,
+            input::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+
+            input[type=number] {
+                -moz-appearance: textfield;
             }
         }
     }

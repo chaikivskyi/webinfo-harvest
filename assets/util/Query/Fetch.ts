@@ -1,9 +1,14 @@
+import { REST_API_PATH } from 'util/Config';
+
 import { ApiResponseWrapper } from './ResponseWrapper';
+import { getAuthToken } from 'util/Auth/Token';
 
 const prepareUrl = (path: string, sort?: string, sortDir?: string) => {
     if (0 !== path.indexOf('/')) {
         path = '/' + path;
     }
+
+    path = REST_API_PATH + path;
 
     if (sort) {
         path += `?order[${sort}]=${sortDir}`;
@@ -13,7 +18,12 @@ const prepareUrl = (path: string, sort?: string, sortDir?: string) => {
 }
 
 export const executeGet = async <T>(path: string, sort?: string, sortDir: string = 'asc') => {
-    const response = await fetch(prepareUrl(path, sort, sortDir));
+    const response = await fetch(prepareUrl(path, sort, sortDir), {
+        headers: {
+            'Content-Type': 'application/ld+json',
+            'Authorization': 'Bearer ' + getAuthToken()
+        },
+    });
 
     if (!response.ok) {
         throw new Error(`Network response was not ok: ${response.statusText}`);
@@ -24,14 +34,15 @@ export const executeGet = async <T>(path: string, sort?: string, sortDir: string
     return new ApiResponseWrapper<T>(data);
 }
 
-export const executePost = async <T>(path: string, requestBody: T) => {
-    const response =  await fetch(path, {
+export const executePost = async <T>(path: string, requestBody: Object) => {
+    const response =  await fetch(prepareUrl(path), {
         method: 'POST',
         body: JSON.stringify(requestBody),
         headers: {
             'Content-Type': 'application/ld+json',
+            'Authorization': 'Bearer ' + getAuthToken()
         },
     });
 
-    return response.json();
+    return response.json() as T;
 }

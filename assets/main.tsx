@@ -5,6 +5,9 @@ import { Provider } from 'react-redux'
 
 import Loader from 'components/Loader';
 import HomePage from 'route/HomePage';
+import RegisterPage from 'route/RegisterPage';
+import LoginPage from 'route/LoginPage';
+
 import { store } from './store';
 import App from './App';
 
@@ -19,6 +22,8 @@ if (rootElement) {
                     <App>
                         <Routes>
                             <Route index element={<HomePage />} />
+                            <Route path="register" element={<RegisterPage />} />
+                            <Route path="login" element={<LoginPage />} />
                         </Routes>
                     </App>
                 </Suspense>
