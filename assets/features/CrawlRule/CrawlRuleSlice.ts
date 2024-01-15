@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
-import type { RootState, AppDispatch } from '../../store'
 import { CrawlRuleItem } from 'query/CrawlRules/CrawlRules.type';
 import { getCrawlRules } from 'query/CrawlRules';
 
@@ -55,7 +54,5 @@ export const crawlRuleSlice = createSlice({
 export const {
     select,
 } = crawlRuleSlice.actions
-
-export const selectRule = (state: RootState) => state.crawlRules.activeId
 
 export default crawlRuleSlice.reducer

@@ -1,3 +1,5 @@
+import { ErrorResponse } from './Query.type';
+
 const prepareUrl = (path: string) => {
     if (0 !== path.indexOf('/')) {
         path = '/' + path;
@@ -14,6 +16,11 @@ export const executePost = async <T>(path: string, requestBody: Object) => {
             'Content-Type': 'application/json',
         },
     });
+
+    if (!response.ok) {
+        const errorResponse = await response.json() as ErrorResponse;
+        throw new Error(errorResponse.message);
+    }
 
     return response.json() as T;
 }
