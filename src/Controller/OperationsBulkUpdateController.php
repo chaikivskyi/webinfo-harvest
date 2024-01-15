@@ -11,7 +11,7 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 
 #[AsController]
-class OperationsBulkUpdate
+class OperationsBulkUpdateController
 {
     public function __construct(
         private EntityManagerInterface $entityManager

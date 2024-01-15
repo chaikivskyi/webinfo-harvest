@@ -10,7 +10,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Post;
-use App\Controller\OperationsBulkUpdate;
+use App\Controller\OperationsBulkUpdateController;
 use App\Dto\BatchOperations;
 use App\Repository\CrawlOperationRepository;
 use App\Type\CrawlOperationEnum;
@@ -27,7 +27,7 @@ use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
         new GetCollection(),
         new Post(
             name: 'crawl-operation',
-            controller: OperationsBulkUpdate::class,
+            controller: OperationsBulkUpdateController::class,
             output: BatchOperations::class,
             input: BatchOperations::class,
             provider: CollectionProvider::class,
