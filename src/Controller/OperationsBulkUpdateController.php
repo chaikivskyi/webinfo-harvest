@@ -25,26 +25,38 @@ class OperationsBulkUpdateController
         $operationRepository = $this->entityManager->getRepository(CrawlOperation::class);
         $crawlRule = $crawlRuleRepository->find($ruleId);
         $operationsIds = $this->getIds($query->getOperations());
-        $operationRepository->deleteExcludedRuleOperations($ruleId, $operationsIds);
-        $operations = $operationRepository->findByIds($operationsIds);
 
-        foreach ($query->getOperations() as $item) {
-            if ($item->getId() && $operation = $this->getOperation($operations, $item->getId())) {
-                $entity = $operation;
-            } else {
-                $entity = $item;
+        $this->entityManager->beginTransaction();
+
+        try {
+            $operationRepository->deleteExcludedRuleOperations($ruleId, $operationsIds);
+            $operations = $operationRepository->findByIds($operationsIds);
+
+            foreach ($query->getOperations() as $item) {
+                if ($item->getId()
+                    && ($operation = $this->getOperation($operations, $item->getId()))
+                    && $operation->getRule()->getId() === $ruleId
+                ) {
+                    $entity = $operation;
+                } else {
+                    $entity = $item;
+                }
+
+                $entity->setPosition($item->getPosition())
+                    ->setName($item->getName())
+                    ->setSelector($item->getSelector())
+                    ->setRule($crawlRule);
+
+                $this->entityManager->persist($entity);
+                $result[] = $entity;
             }
 
-            $entity->setPosition($item->getPosition())
-                ->setName($item->getName())
-                ->setSelector($item->getSelector())
-                ->setRule($crawlRule);
-
-            $this->entityManager->persist($entity);
-            $result[] = $entity;
+            $this->entityManager->flush();
+            $this->entityManager->commit();
+        } catch (\Exception $e) {
+            $this->entityManager->rollback();
+            throw $e;
         }
-
-        $this->entityManager->flush();
 
         return new BatchOperations($result);
     }

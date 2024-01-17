@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use ApiPlatform\Doctrine\Orm\State\CollectionProvider;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
@@ -13,16 +12,18 @@ use ApiPlatform\Metadata\Post;
 use App\Controller\OperationsBulkUpdateController;
 use App\Dto\BatchOperations;
 use App\Repository\CrawlOperationRepository;
+use App\State\RuleOperationsProvider;
 use App\Type\CrawlOperationEnum;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 
-
 #[ApiResource(
+    security: "is_granted('ROLE_USER')",
     uriTemplate: '/crawl-rule/{ruleId}/operations',
     uriVariables: [
         'ruleId' => new Link(fromClass: CrawlRule::class, toProperty: 'rule'),
     ],
+    provider: RuleOperationsProvider::class,
     operations: [
         new GetCollection(),
         new Post(
@@ -30,10 +31,9 @@ use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
             controller: OperationsBulkUpdateController::class,
             output: BatchOperations::class,
             input: BatchOperations::class,
-            provider: CollectionProvider::class,
             openapiContext: [
                 'summary' => 'Bulk create, update, or delete CrawlOperation resources.'
-            ]
+            ],
         )
     ]
 )]
