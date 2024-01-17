@@ -9,16 +9,22 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Post;
 use App\Repository\CrawlRuleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ApiResource(security: "is_granted('ROLE_USER')")]
+#[ApiResource(
+    normalizationContext: ['groups' => ['rule:read']],
+    denormalizationContext: ['groups' => ['rule:create', 'rule:update']],
+)]
 #[Delete(security: "is_granted('ROLE_ADMIN')")]
 #[Get(security: "is_granted('ROLE_ADMIN') or object.owner == user")]
 #[Patch(security: "is_granted('ROLE_ADMIN') or object.owner == user")]
 #[Put(security: "is_granted('ROLE_ADMIN') or object.owner == user")]
+#[Post]
 #[GetCollection(security: "is_granted('ROLE_ADMIN')")]
 #[ORM\Entity(repositoryClass: CrawlRuleRepository::class)]
 class CrawlRule
@@ -26,9 +32,11 @@ class CrawlRule
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups('rule:read')]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['rule:read', 'rule:update'])]
     private ?string $label = null;
 
     #[ORM\OneToMany(targetEntity: CrawlOperation::class, orphanRemoval: true, mappedBy: 'rule', fetch: 'LAZY')]
