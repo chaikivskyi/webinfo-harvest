@@ -1,12 +1,16 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 
-import {DashboardOperationsProps} from './DashboardOperations.type';
-import {getOperations, saveOperations as querySaveOperations} from 'query/CrawlOperations';
-import {CrawlOperation, Names} from 'query/CrawlOperations/CrawlOperations.type';
+import { DashboardOperationsProps } from './DashboardOperations.type';
+import { getOperations, saveOperations as querySaveOperations } from 'query/CrawlOperations';
+import { CrawlOperation, Names } from 'query/CrawlOperations/CrawlOperations.type';
 import ArrowDownIcon from 'components/ArrowDownIcon';
 import CrossIcon from 'components/CrossIcon';
 import PlusIcon from 'components/PlusIcon';
 import Loader from 'components/Loader';
+import { addNotification } from 'features/Notification/NotificationSlice';
+import { NotificationType } from 'components/NotificationList/NotificationList.type';
+import { useAppDispatch } from 'features/hooks';
+
 
 import './DashboardOperations.style.scss';
 
@@ -14,12 +18,17 @@ export const DashboardOperations = (props: DashboardOperationsProps) => {
     const { ruleId } = props;
     const [ operations, setOperations ] = useState<CrawlOperation[]>([]);
     const [ isLoading, setIsLoading ] = useState<boolean>(false);
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         updateOperations();
     }, [ruleId]);
 
     const updateOperations = () => {
+        if (!ruleId) {
+            return;
+        }
+
         setIsLoading(true);
         getOperations(ruleId, 'position').then((response) => {
             setOperations(response.getMembers() as CrawlOperation[]);
@@ -29,6 +38,11 @@ export const DashboardOperations = (props: DashboardOperationsProps) => {
     }
 
     const saveOperations = () => {
+        if (!ruleId) {
+            dispatch(addNotification({ text: 'Please save rule before', type: NotificationType.Error }));
+            return;
+        }
+
         querySaveOperations(ruleId, operations.map((operation): Partial<CrawlOperation> => {
             return {
                 id: operation?.id,
@@ -38,6 +52,10 @@ export const DashboardOperations = (props: DashboardOperationsProps) => {
             };
         })).then(() => {
             updateOperations();
+            dispatch(addNotification({ text: 'Operations successfully saved', type: NotificationType.Success }));
+        }).catch((e) => {
+            dispatch(addNotification({ text: e.message, type: NotificationType.Error }));
+
         });
     }
 

@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class MainController extends AbstractController
 {
-    #[Route('/{any}', name: 'app_main', methods: ['GET'], requirements: ['any' => '.*'])]
+    #[Route('/{any}', name: 'app_main', methods: ['GET'], requirements: ['any' => '^(login|register)?$'])]
     public function index(): Response
     {
         return $this->render('main.html.twig');

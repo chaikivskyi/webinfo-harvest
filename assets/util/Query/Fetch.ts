@@ -26,7 +26,7 @@ export const executeGet = async <T>(path: string, sort?: string, sortDir: string
     });
 
     if (!response.ok) {
-        throw new Error(`Network response was not ok: ${response.statusText}`);
+        throw new Error(response.statusText);
     }
 
     const data = await response.json();
@@ -43,6 +43,10 @@ export const executePost = async <T>(path: string, requestBody: Object) => {
             'Authorization': 'Bearer ' + getAuthToken()
         },
     });
+
+    if (!response.ok) {
+        throw new Error(response.statusText);
+    }
 
     return response.json() as T;
 }

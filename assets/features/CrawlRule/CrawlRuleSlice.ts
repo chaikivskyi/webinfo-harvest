@@ -29,7 +29,7 @@ export const crawlRuleSlice = createSlice({
         select: (state, action: PayloadAction<number>) => {
             sessionStorage.setItem('dashboard_active_rule', String(action.payload));
             state.activeId = action.payload
-            state.activeRule = state.rules.find((rule) => rule.id === action.payload);
+            state.activeRule = state.rules.find((rule) => rule.id === action.payload) || {} as CrawlRuleItem;
         },
     },
     extraReducers: (builder) => {

@@ -6,5 +6,5 @@ export const getCrawlRules = async () => {
 }
 
 export const createRule = async (data: Omit<CrawlRuleItem, 'id' | 'operations'>) => {
-    return await executePost<Omit<CrawlRuleItem, 'id' | 'operations'>>('/crawl-rule', data);
+    return await executePost<CrawlRuleItem>('/crawl-rule', data);
 }

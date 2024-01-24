@@ -14,7 +14,7 @@ export const NotificationList = () => {
     }
 
     const renderNotification = (notification: Notification, id: string) => {
-        return <div className={`Notification Notification_type_${notification.type}`} id={id}>
+        return <div className={`Notification Notification_type_${notification.type}`} id={id} key={id}>
             <button className="Notification-Button" onClick={() => {
                 hideNotification(id);
             }}>Close

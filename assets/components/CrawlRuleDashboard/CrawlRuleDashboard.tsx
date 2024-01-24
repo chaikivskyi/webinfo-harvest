@@ -1,12 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, createRef } from 'react';
 import { useAppSelector } from 'features/hooks'
 
+import CrawlRuleForm from 'components/CrawlRuleForm';
 import DashboardOperations from 'components/DashboardOperations';
 
 import './CrawlRuleDashboard.style.scss';
 
 export const CrawlRuleDashboard = () => {
-    const rule = useAppSelector(state => state.crawlRules.activeRule)
+    const rule = useAppSelector(state => state.crawlRules.activeRule);
+
+    const renderSaveButton = () => <div>
+        <button className="Button-Main">Save</button>
+    </div>;
 
     if (!rule) {
         return <div className="CrawlRuleDashboard">
@@ -15,8 +20,8 @@ export const CrawlRuleDashboard = () => {
     }
 
     return <div className="CrawlRuleDashboard">
-        <h2>{ rule && rule.label } </h2>
-        <DashboardOperations ruleId={ rule.id }/>
+        <CrawlRuleForm rule={ rule }/>
+        <DashboardOperations ruleId={ rule.id } />
     </div>;
 }
 

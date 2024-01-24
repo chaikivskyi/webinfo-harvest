@@ -15,17 +15,19 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
     normalizationContext: ['groups' => ['rule:read']],
     denormalizationContext: ['groups' => ['rule:create', 'rule:update']],
+    security: "is_granted('ROLE_USER')"
 )]
-#[Delete(security: "is_granted('ROLE_ADMIN')")]
-#[Get(security: "is_granted('ROLE_ADMIN') or object.owner == user")]
-#[Patch(security: "is_granted('ROLE_ADMIN') or object.owner == user")]
-#[Put(security: "is_granted('ROLE_ADMIN') or object.owner == user")]
-#[Post]
-#[GetCollection(security: "is_granted('ROLE_ADMIN')")]
+#[Delete(security: "is_granted('ROLE_USER') and object.owner == user")]
+#[Get(security: "is_granted('ROLE_USER') and object.owner == user")]
+#[Patch(security: "is_granted('ROLE_USER') and object.owner == user")]
+#[Put(security: "is_granted('ROLE_USER') and object.owner == user")]
+#[Post(security: "is_granted('ROLE_USER')")]
+#[GetCollection(security: "is_granted('ROLE_USER')")]
 #[ORM\Entity(repositoryClass: CrawlRuleRepository::class)]
 class CrawlRule
 {
@@ -36,14 +38,15 @@ class CrawlRule
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
     #[Groups(['rule:read', 'rule:update'])]
     private ?string $label = null;
 
     #[ORM\OneToMany(targetEntity: CrawlOperation::class, orphanRemoval: true, mappedBy: 'rule', fetch: 'LAZY')]
     private Collection $operations;
 
-    #[Orm\ManyToOne(targetEntity: User::class, fetch: 'LAZY')]
-    #[Orm\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    #[Orm\ManyToOne(targetEntity: User::class, fetch: 'LAZY', cascade: ['remove'])]
+    #[Orm\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false)]
     private ?User $user = null;
 
     public function __construct()

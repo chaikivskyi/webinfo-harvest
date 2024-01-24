@@ -32,6 +32,6 @@ class RuleOperationsProvider implements ProviderInterface
     private function isAccessAllowed(int $ruleId)
     {
         $rule = $this->entityManager->getRepository(CrawlRule::class)->find($ruleId);
-        return $rule->getUser() === $this->security->getUser();
+        return $rule ? $rule->getUser() === $this->security->getUser() : true;
     }
 }
